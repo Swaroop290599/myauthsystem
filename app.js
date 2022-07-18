@@ -3,8 +3,10 @@ require('./config/database').connect();
 const express = require("express");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+var cookieParser = require('cookie-parser');
 const auth = require('./middleware/auth');
 const app = express();
+app.use(cookieParser());
 app.use(express.json()); // middleware to show json results
 const User = require("./model/user"); // line of code to write moongoose query to identify if userexist or not
 
@@ -74,7 +76,18 @@ app.post('/login' , async(req,res) => {
         }
       )
       user.token = token;
-      res.status(200).json(user);
+      //res.status(200).json(user);
+
+      const options = {
+        expires : new Date(Date.now()+ 3*24*60*60*1000),
+        httpOnly: true
+      };
+
+      res.status(200).cookie('token', token , options).json({
+        success: true,
+        token,
+        user
+      });
     }
 
     res.status(400).send("Email or password is incorrect ")
