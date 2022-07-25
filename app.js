@@ -1,11 +1,11 @@
 require("dotenv").config();              //.env config code
 require('./config/database').connect();
 const express = require("express");
+const app = express();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 var cookieParser = require('cookie-parser');
 const auth = require('./middleware/auth');
-const app = express();
 app.use(cookieParser());
 app.use(express.json()); // middleware to show json results
 const User = require("./model/user"); // line of code to write moongoose query to identify if userexist or not
